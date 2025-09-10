@@ -1,0 +1,36 @@
+name: CI with Env Vars
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # job-level environment variables
+    env:
+      DEMO_VAR: ${{ vars.DEMO_VAR }}
+      API_KEY: ${{ secrets.API_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run app with env vars
+        run: npm start
+
+      # Example of step-level environment variable
+      - name: Step with custom env
+        run: echo "CUSTOM_VAR is $CUSTOM_VAR"
+        env:
+          CUSTOM_VAR: "step only"
